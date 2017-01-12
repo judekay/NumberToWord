@@ -29,30 +29,6 @@ public class NumberToWord {
         }
             return unitWordMap.get(unitVal);
     }
-//
-//    public String TensValue(int tensVal) {
-//        int[] tens = new int[] {
-//                10,11,12,13,
-//                14,15,16,17,
-//                18,19
-//        };
-//        String[] tenswords = new String[] {
-//                "ten","eleven","twelve",
-//                "thirteen","fourteen","fifteen",
-//                "sixteen","seventeen","eighteen",
-//                "nineteen"
-//        };
-//        HashMap<Integer, String> tensWordMap = new HashMap<>();
-//        for(int i = 0; i < tens.length; i++) {
-//            tensWordMap.put(tens[i], tenswords[i]);
-//        }
-//        if(String.valueOf(tensVal).length() > 2) {
-//            return "Invalid tens value";
-//        }
-//
-//        return tensWordMap.get(tensVal);
-//
-//    }
 
     public String TensValue(int tensVal) {
         //for 10 - 19
@@ -148,29 +124,40 @@ public class NumberToWord {
         return "Invalid hundred value";
     }
 
-    public String ThousandValue(int thousandValue){
+    public String ThousandValue(long thousandValue){
         int inputLength = String.valueOf(thousandValue).length();
         String thousand = "thousand";
         String million =  "million";
+        String billion = "billion";
+        String trillion = "trillion";
+        String zillion = "zillion";
 
         switch (inputLength){
             case 4:
-                return manipulateGreaterThanThousand(thousandValue,1,1,4,thousand);
-
             case 5:
-                return manipulateGreaterThanThousand(thousandValue,2,2,5,thousand);
-
             case 6:
-                return manipulateGreaterThanThousand(thousandValue,3,3,6,thousand);
+                return manipulateGreaterThanThousand(thousandValue,inputLength - 3,inputLength - 3,inputLength,thousand);
 
             case 7:
-                return manipulateGreaterThanThousand(thousandValue,1,3,6,million);
-
             case 8:
-                return manipulateGreaterThanThousand(thousandValue,2,3,6,million);
-
             case 9:
-                return manipulateGreaterThanThousand(thousandValue,3,3,6,million);
+                return manipulateGreaterThanThousand(thousandValue,inputLength - 6,inputLength - 6,inputLength,million);
+
+            case 10:
+            case 11:
+            case 12:
+                return manipulateGreaterThanThousand(thousandValue,inputLength - 9,inputLength - 9,inputLength,billion);
+
+            case 13:
+            case 14:
+            case 15:
+                return manipulateGreaterThanThousand(thousandValue,inputLength - 12,inputLength - 12,inputLength,trillion);
+
+            case 16:
+            case 17:
+            case 18:
+                return manipulateGreaterThanThousand(thousandValue,inputLength - 15,inputLength - 15,inputLength,zillion);
+
             default:
                 return "Invalid thousand value";
 
@@ -178,54 +165,7 @@ public class NumberToWord {
 
     }
 
-
-    public String MillionValue(int millionValue){
-        int inputMillionLength = String.valueOf(millionValue).length();
-        String million = "million";
-        switch (inputMillionLength){
-            case 7:
-                return manipulateGreaterThanThousand(millionValue,1,1,4,million);
-
-            case 8:
-                return manipulateGreaterThanThousand(millionValue,2,2,5,million);
-
-            case 9:
-                return manipulateGreaterThanThousand(millionValue,3,3,6,million);
-
-            default:
-                return "Invalid million value";
-
-        }
-
-    }
-//    public String MillionValue(int millionValue){
-//        int inputLength = String.valueOf(millionValue).length();
-//        StringBuilder thousandToWord = new StringBuilder();
-//        int firstValue;
-//        String firstValInWord;
-//        String firstThousand;
-//        String otherThousandVal;
-//        switch (inputLength){
-//            case 7:
-//                firstValue = Integer.parseInt(String.valueOf(String.valueOf(millionValue).charAt(0)));
-//                firstValInWord = UnitValue(firstValue);
-//                firstThousand = firstValInWord + " million, ";
-//                thousandToWord.append(firstThousand);
-//                otherThousandVal = String.valueOf(inputValue).substring(3,6);
-//                thousandToWord.append(HundredsValue(Integer.parseInt(otherThousandVal)));
-//                return thousandToWord.toString();
-//                return "";
-//            case 8:
-//                return "";
-//            case 9:
-//                return "";
-//            default:
-//                return "";
-//        }
-
-//    }
-
-    private String manipulateGreaterThanThousand(int inputValue, int secondIndex, int indexFrom, int indexTo, String unitType){
+    private String manipulateGreaterThanThousand(long inputValue, int secondIndex, int indexFrom, int indexTo, String unitType){
         StringBuilder numberToWord = new StringBuilder();
         int firstValue = Integer.parseInt(String.valueOf(inputValue).substring(0,secondIndex));
         String firstValInWord;
@@ -254,33 +194,167 @@ public class NumberToWord {
                         if(Integer.parseInt(othernumbersVal.substring(0, 1)) > 0){
                             numberToWord.append(HundredsValue(Integer.parseInt(othernumbersVal)));
                         }
-                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0 && Integer.parseInt(othernumbersVal.substring(1, 2)) > 0) {
-                            numberToWord.append(TensValue(Integer.parseInt(othernumbersVal)));
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
+                                && Integer.parseInt(othernumbersVal.substring(1, 2)) > 0) {
+
+                            String appendVal = "and"+ TensValue(Integer.parseInt(othernumbersVal));
+                            numberToWord.append(appendVal);
                         }
-                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0 && Integer.parseInt(othernumbersVal.substring(1, 2)) == 0
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
+                                && Integer.parseInt(othernumbersVal.substring(1, 2)) == 0
                                 && Integer.parseInt(othernumbersVal.substring(2, 3)) > 0) {
-                            numberToWord.append(UnitValue(Integer.parseInt(othernumbersVal)));
+                            String appendVal = "and"+ UnitValue(Integer.parseInt(othernumbersVal));
+                            numberToWord.append(appendVal);
                         }
                         else{
-                            //  str = str.substring(0, str.length()-1);
                             String str = numberToWord.substring(0, numberToWord.length()-2);
                             numberToWord.setLength(0);
                             numberToWord.append(str);
                         }
 
-                        return numberToWord.toString();
+                        return numberToWord.toString().replace(", and", " and ");
                     case "million":
                         othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
                         if(Integer.parseInt(othernumbersVal.substring(0, 1)) > 0){
                             numberToWord.append(ThousandValue(Integer.parseInt(othernumbersVal)));
                         }
-                        else{
-                            //  str = str.substring(0, str.length()-1);
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0 && Integer.parseInt(othernumbersVal) != 0) {
+                            int newOtherNumbersVal = Integer.parseInt(othernumbersVal);
+                            int newOtherNumbersLenght = String.valueOf(newOtherNumbersVal).length();
+                            String appendVal;
+                            switch (newOtherNumbersLenght) {
+                                case 5: case 4:
+                                    numberToWord.append(ThousandValue(newOtherNumbersVal));
+                                    break;
+                                case 3:
+                                    numberToWord.append(HundredsValue(newOtherNumbersVal));
+                                    break;
+                                case 2:
+                                    appendVal = "and"+ TensValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                                    break;
+                                case 1:
+                                    appendVal = "and"+ UnitValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                            }
+
+                        }
+                        else {
                             String str = numberToWord.substring(0, numberToWord.length()-2);
                             numberToWord.setLength(0);
                             numberToWord.append(str);
                         }
-                        return numberToWord.toString();
+                        return numberToWord.toString().replace(", and", " and ");
+
+
+                    case "billion":
+                        othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
+                        if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
+                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            numberToWord.append(result);
+                        }
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
+                                && Integer.parseInt(othernumbersVal) != 0) {
+                            int newOtherNumbersVal = Integer.parseInt(othernumbersVal);
+                            int newOtherNumbersLenght = String.valueOf(newOtherNumbersVal).length();
+                            String appendVal;
+                            switch (newOtherNumbersLenght) {
+                                case 8: case 7: case 6: case 5: case 4:
+                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    break;
+                                case 3:
+                                    numberToWord.append(HundredsValue(newOtherNumbersVal));
+                                    break;
+                                case 2:
+                                    appendVal = "and"+ TensValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                                    break;
+                                case 1:
+                                    appendVal = "and"+ UnitValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                            }
+
+
+                        }
+                        else {
+                            String str = numberToWord.substring(0, numberToWord.length()-2);
+                            numberToWord.setLength(0);
+                            numberToWord.append(str);
+                        }
+                        return numberToWord.toString().replace(", and", " and ");
+
+
+
+                    case "trillion":
+                        othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
+                        if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
+                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            numberToWord.append(result);
+                        }
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
+                                && Integer.parseInt(othernumbersVal) != 0) {
+                            int newOtherNumbersVal = Integer.parseInt(othernumbersVal);
+                            int newOtherNumbersLenght = String.valueOf(newOtherNumbersVal).length();
+                            String appendVal;
+                            switch (newOtherNumbersLenght) {
+                                case 11: case 10: case 9: case 8:
+                                case 7: case 6: case 5: case 4:
+                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    break;
+                                case 3:
+                                    numberToWord.append(HundredsValue(newOtherNumbersVal));
+                                    break;
+                                case 2:
+                                    appendVal = "and" + TensValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                                    break;
+                                case 1:
+                                    appendVal = "and" + UnitValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                            }
+                        } else {
+                            String str = numberToWord.substring(0, numberToWord.length()-2);
+                            numberToWord.setLength(0);
+                            numberToWord.append(str);
+                        }
+                        return numberToWord.toString().replace(", and", " and ");
+
+
+                    case "zillion":
+                        othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
+                        if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
+                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            numberToWord.append(result);
+                        }
+                        else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
+                                && Integer.parseInt(othernumbersVal) != 0) {
+                            int newOtherNumbersVal = Integer.parseInt(othernumbersVal);
+                            int newOtherNumbersLenght = String.valueOf(newOtherNumbersVal).length();
+                            String appendVal;
+                            switch (newOtherNumbersLenght) {
+                                case 14: case 13: case 12: case 11: case 10:
+                                case 9: case 8: case 7: case 6: case 5: case 4:
+                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    break;
+                                case 3:
+                                    numberToWord.append(HundredsValue(newOtherNumbersVal));
+                                    break;
+                                case 2:
+                                    appendVal = "and" + TensValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                                    break;
+                                case 1:
+                                    appendVal = "and" + UnitValue(newOtherNumbersVal);
+                                    numberToWord.append(appendVal);
+                            }
+                        } else {
+                            String str = numberToWord.substring(0, numberToWord.length()-2);
+                            numberToWord.setLength(0);
+                            numberToWord.append(str);
+                        }
+                        return numberToWord.toString().replace(", and", " and ");
+
+
                     default:
                         return "invalid";
 

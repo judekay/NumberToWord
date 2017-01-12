@@ -11,7 +11,7 @@ public class Main {
 	// write your code here
         print("Enter an integer value to convert");
         Scanner sc = new Scanner(System.in);
-        int inputInteger = sc.nextInt();
+        long inputInteger = sc.nextLong();
 
         NumberToWord numberToWord = new NumberToWord();
         String word = numberToWord.ThousandValue(inputInteger);
