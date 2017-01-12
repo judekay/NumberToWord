@@ -1,4 +1,12 @@
 # NumberToWord
-This project will simply help in projects that needs to convert numbers to words. It is currently limited to numbers less than Quintillion. It is written in java but will be made available in other languages soon. It is simply limited numbers within the range of zillion.
+This project is a simple class that convert numbers to words. It is currently limited to numbers within the range of Zillion. It was written in java but will be made available in other languages soon. 
 
-To Test Import the Pr
+To use this, simply import the class <b>(NumberToWord)</b> to your project. Instantiate this class and call the method <b>ConvertToWord(long longValue)</b>.
+
+Example:
+
+
+        NumberToWord numberToWord = new NumberToWord();
+ 
+        String word = numberToWord.ConvertToWord(inputInteger);
+
