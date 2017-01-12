@@ -14,7 +14,47 @@ public class NumberToWord {
 
     }
 
-    public String UnitValue(int unitVal) {
+    public String ConvertToWord(long inputValue) {
+
+        String response = "";
+
+        try {
+            long inputFormatted = Long.parseLong(String.valueOf(inputValue));
+            int inputLength = String.valueOf(inputFormatted).length();
+            //get the length and check if it is greater than hundreds
+            if(inputLength > 3){
+
+                return ThousandandAboveValue(inputFormatted);
+            }
+            else if(inputLength > 0  && inputLength <= 3){
+                switch (inputLength) {
+                    case 1:
+                        response = UnitValue(inputFormatted);
+                        break;
+
+                    case 2:
+                        response = TensValue(inputFormatted);
+                        break;
+                    case 3:
+                        response = HundredsValue(inputFormatted);
+                        break;
+                    default:
+                        //throw new Exception();
+                        response =  "Invalid Number";
+                        break;
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response =  "Invalid Number";
+        }
+        return response;
+    }
+
+    private String UnitValue(long unitVal) {
         HashMap<Integer, String> unitWordMap = new HashMap<>();
         String[] unitwords = new String[] {
                 "zero", "one", "two", "three",
@@ -25,12 +65,12 @@ public class NumberToWord {
             unitWordMap.put(i, unitwords[i]);
         }
         if(String.valueOf(unitVal).length() > 1) {
-            return "Invalid unit value";
+            return "Invalid number";
         }
-            return unitWordMap.get(unitVal);
+            return unitWordMap.get(Integer.parseInt(String.valueOf(unitVal)));
     }
 
-    public String TensValue(int tensVal) {
+    private String TensValue(long tensVal) {
         //for 10 - 19
         int[] tens10_19 = new int[] {
                 10,11,12,13,
@@ -48,7 +88,6 @@ public class NumberToWord {
             tensWordMap10_19.put(tens10_19[i], tenswords10_19[i]);
         }
 
-
         int[] tens = new int[] {
                 20,30,
                 40,50,60,70,
@@ -65,7 +104,7 @@ public class NumberToWord {
             tensWordMap.put(tens[i], tenswords[i]);
         }
         if(inArray(tensVal, tens10_19)){
-            return tensWordMap10_19.get(tensVal);
+            return tensWordMap10_19.get(Integer.parseInt(String.valueOf(tensVal)));
         } else {
             if (String.valueOf(tensVal).length() > 2) {
                 return "Invalid tens value";
@@ -87,11 +126,11 @@ public class NumberToWord {
 
             }
         }
-        return tensWordMap.get(tensVal);
+        return tensWordMap.get(Integer.parseInt(String.valueOf(tensVal)));
 
     }
 
-    public String HundredsValue(int hundredsValue) {
+    private String HundredsValue(long hundredsValue) {
         String hundred = "hundred";
         int[] tens = new int[] {10,11,12,13,14,15,16,17,18,19};
         int[] hundreds = new int[]{100,200,300,400,500,600,700,800,900};
@@ -121,10 +160,10 @@ public class NumberToWord {
             return firstValInWord + " "+ hundred + " and " + lastTwoValsInWord.toString();
 
         }
-        return "Invalid hundred value";
+        return "Invalid number";
     }
 
-    public String ThousandValue(long thousandValue){
+    private String ThousandandAboveValue(long thousandValue){
         int inputLength = String.valueOf(thousandValue).length();
         String thousand = "thousand";
         String million =  "million";
@@ -133,33 +172,23 @@ public class NumberToWord {
         String zillion = "zillion";
 
         switch (inputLength){
-            case 4:
-            case 5:
-            case 6:
+            case 4: case 5: case 6:
                 return manipulateGreaterThanThousand(thousandValue,inputLength - 3,inputLength - 3,inputLength,thousand);
 
-            case 7:
-            case 8:
-            case 9:
+            case 7: case 8: case 9:
                 return manipulateGreaterThanThousand(thousandValue,inputLength - 6,inputLength - 6,inputLength,million);
 
-            case 10:
-            case 11:
-            case 12:
+            case 10: case 11: case 12:
                 return manipulateGreaterThanThousand(thousandValue,inputLength - 9,inputLength - 9,inputLength,billion);
 
-            case 13:
-            case 14:
-            case 15:
+            case 13: case 14: case 15:
                 return manipulateGreaterThanThousand(thousandValue,inputLength - 12,inputLength - 12,inputLength,trillion);
 
-            case 16:
-            case 17:
-            case 18:
+            case 16: case 17: case 18:
                 return manipulateGreaterThanThousand(thousandValue,inputLength - 15,inputLength - 15,inputLength,zillion);
 
             default:
-                return "Invalid thousand value";
+                return "Invalid number";
 
         }
 
@@ -216,7 +245,7 @@ public class NumberToWord {
                     case "million":
                         othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
                         if(Integer.parseInt(othernumbersVal.substring(0, 1)) > 0){
-                            numberToWord.append(ThousandValue(Integer.parseInt(othernumbersVal)));
+                            numberToWord.append(ThousandandAboveValue(Integer.parseInt(othernumbersVal)));
                         }
                         else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0 && Integer.parseInt(othernumbersVal) != 0) {
                             int newOtherNumbersVal = Integer.parseInt(othernumbersVal);
@@ -224,7 +253,7 @@ public class NumberToWord {
                             String appendVal;
                             switch (newOtherNumbersLenght) {
                                 case 5: case 4:
-                                    numberToWord.append(ThousandValue(newOtherNumbersVal));
+                                    numberToWord.append(ThousandandAboveValue(newOtherNumbersVal));
                                     break;
                                 case 3:
                                     numberToWord.append(HundredsValue(newOtherNumbersVal));
@@ -250,7 +279,7 @@ public class NumberToWord {
                     case "billion":
                         othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
                         if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
-                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            String result = ThousandandAboveValue(Long.parseLong(String.valueOf(othernumbersVal)));
                             numberToWord.append(result);
                         }
                         else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
@@ -260,7 +289,7 @@ public class NumberToWord {
                             String appendVal;
                             switch (newOtherNumbersLenght) {
                                 case 8: case 7: case 6: case 5: case 4:
-                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    numberToWord.append(ThousandandAboveValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
                                     break;
                                 case 3:
                                     numberToWord.append(HundredsValue(newOtherNumbersVal));
@@ -288,7 +317,7 @@ public class NumberToWord {
                     case "trillion":
                         othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
                         if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
-                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            String result = ThousandandAboveValue(Long.parseLong(String.valueOf(othernumbersVal)));
                             numberToWord.append(result);
                         }
                         else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
@@ -299,7 +328,7 @@ public class NumberToWord {
                             switch (newOtherNumbersLenght) {
                                 case 11: case 10: case 9: case 8:
                                 case 7: case 6: case 5: case 4:
-                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    numberToWord.append(ThousandandAboveValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
                                     break;
                                 case 3:
                                     numberToWord.append(HundredsValue(newOtherNumbersVal));
@@ -323,7 +352,7 @@ public class NumberToWord {
                     case "zillion":
                         othernumbersVal = String.valueOf(inputValue).substring(indexFrom,indexTo);
                         if(Integer.parseInt(othernumbersVal.substring(0,1)) > 0){
-                            String result = ThousandValue(Long.parseLong(String.valueOf(othernumbersVal)));
+                            String result = ThousandandAboveValue(Long.parseLong(String.valueOf(othernumbersVal)));
                             numberToWord.append(result);
                         }
                         else if(Integer.parseInt(othernumbersVal.substring(0, 1)) == 0
@@ -334,7 +363,7 @@ public class NumberToWord {
                             switch (newOtherNumbersLenght) {
                                 case 14: case 13: case 12: case 11: case 10:
                                 case 9: case 8: case 7: case 6: case 5: case 4:
-                                    numberToWord.append(ThousandValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
+                                    numberToWord.append(ThousandandAboveValue(Long.parseLong(String.valueOf(newOtherNumbersVal))));
                                     break;
                                 case 3:
                                     numberToWord.append(HundredsValue(newOtherNumbersVal));
@@ -356,7 +385,7 @@ public class NumberToWord {
 
 
                     default:
-                        return "invalid";
+                        return "invalid number";
 
                 }
 
@@ -365,7 +394,7 @@ public class NumberToWord {
 
     }
 
-    private static boolean inArray(int a, int arrayList[]){
+    private static boolean inArray(long a, int arrayList[]){
         for (int ch: arrayList) {
             if(a == ch){
                 return true;
