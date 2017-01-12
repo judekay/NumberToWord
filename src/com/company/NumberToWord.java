@@ -132,13 +132,12 @@ public class NumberToWord {
 
     private String HundredsValue(long hundredsValue) {
         String hundred = "hundred";
-        int[] tens = new int[] {10,11,12,13,14,15,16,17,18,19};
         int[] hundreds = new int[]{100,200,300,400,500,600,700,800,900};
         if(inArray(hundredsValue, hundreds)){
             return UnitValue(Integer.parseInt(String.valueOf
                                                 (String.valueOf(hundredsValue).charAt(0))
                                               )
-            ) + Constant.HUNDRED;
+            ) + "hundred";
         }
         else if(String.valueOf(hundredsValue).length() == 3 && !inArray(hundredsValue, hundreds)) {
             int firstVal = Integer.parseInt(String.valueOf(String.valueOf(hundredsValue).charAt(0)));
